@@ -2,6 +2,7 @@ var secondsEl = document.querySelector("#seconds");
 var startBtn = document.querySelector("#startButton");
 
 
+
 startBtn.addEventListener("click", function () {
     var timeLeft = 75;
     var countDownTimer = setInterval(function () {
