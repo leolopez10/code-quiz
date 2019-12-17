@@ -64,17 +64,15 @@ startBtn.addEventListener("click", function () {
 })
 
 
-var question = [questions[0].title, questions[1].title, questions[2].title, questions[3].title, questions[4].title];
-console.log(Math.floor(Math.random() * question.length));
- 
-
+//********* generate random question with answers *********************8*/
 function renderRandomQuestion(){
     questionsEl.innerHTML = ""
-    var AllQuestions = [questions[0].title, questions[1].title, questions[2].title, questions[3].title, questions[4].title];
-    var question = Math.floor(Math.random() * Allquestions.length);
-
+    var question = [questions[0].title, questions[1].title, questions[2].title, questions[3].title, questions[4].title];
+    var randomQuestion = Math.floor(Math.random() * question.length)
+    console.log(question[randomQuestion])
+    
     var h3 = document.createElement("h3");
-    h3.textContent = question;
+    h3.textContent = question[randomQuestion];
     questionsEl.appendChild(h3);
 }
 renderRandomQuestion();
