@@ -106,11 +106,13 @@ function renderRandomQuestion() {
         choicesEl.appendChild(correctBtn);
 
         //Add an if statement if correct answer is clicked.
-        
+
 
     }
     renderChoices();
 }
+
+
 
 //*********click effects for answers */
 
