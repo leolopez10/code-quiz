@@ -66,14 +66,36 @@ startBtn.addEventListener("click", function () {
 
 //********* generate random question with answers *********************8*/
 function renderRandomQuestion(){
+    // create an array full of all the questions and have program pick one at random
     questionsEl.innerHTML = ""
     var question = [questions[0].title, questions[1].title, questions[2].title, questions[3].title, questions[4].title];
     var randomQuestion = Math.floor(Math.random() * question.length)
     console.log(question[randomQuestion])
     
+    // render the question
     var h3 = document.createElement("h3");
     h3.textContent = question[randomQuestion];
     questionsEl.appendChild(h3);
+
+    // create a question appropate the question
+    function renderChoices() {
+    choicesEl.innerHTML = "";
+    // create a choice list of all the choices arrays
+    var choicesList = [questions[0].choices, questions[1].choices, questions[2].choices, questions[3].choices, questions[4].choices]; 
+    console.log(choicesList);
+    //make the choices match the question
+    var choiceList = choicesList[randomQuestion];
+    console.log(choiceList);
+    //create a loop to display all the choices in the choices array.
+    for (var i = 0; i < choiceList.length; i++) {
+        console.log(choiceList[i]);
+        //Render the choices
+        var choicebtns = document.createElement("button");
+        choicebtns.textContent = choiceList[i];
+        choicesEl.appendChild(choicebtns);
+    }
+}
+renderChoices()
 }
 renderRandomQuestion();
 
