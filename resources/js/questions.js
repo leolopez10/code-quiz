@@ -2,27 +2,27 @@
 var questions = [
     {
         title: "Commonly Used data types DO NOT include:",
-        choices: ["stings", "booleans", "numbers"],
+        choices: ["stings", "alerts", "booleans", "numbers"],
         answer: "alerts"
     },
     {
         title: "The condition in an if / else statment is enclosed within _____.",
-        choices: ["quotes", "curly brackets", "square brackets"],
+        choices: ["parentheses", "quotes", "curly brackets", "square brackets"],
         answer: "parentheses"
     },
     {
         title: "What javascipt method can we use to select an html element?",
-        choices: ["document.queryselector()", "document.getElementChild", "document.getElementById"],
+        choices: ["document.queryselector()", "document.getElementChild", "document.getElementById", "Both 1 and 3"],
         answer: "Both 1 and 3"
     },
     {
         title: "What html tag is NOT included in the HEAD tag?",
-        choices: ["link", "meta", "title"],
+        choices: ["link", "meta", "title", "header"],
         answer: "header"
     },
     {
         title: "What attribute is used in html to decorate content?",
-        choices: ["css", "class", "src"],
+        choices: ["css", "class", "src", "style"],
         answer: "style"
     }
 ]
@@ -35,6 +35,8 @@ var quizScreen = document.querySelector("#quiz-section");
 
 var questionsEl = document.querySelector("#question")
 var choicesEl = document.querySelector("#choices");
+
+var theirAnswer = localStorage.getItem("theirAnswer");
 
 //start game button....................................
 startBtn.addEventListener("click", function () {
@@ -72,7 +74,7 @@ function renderRandomQuestion() {
     questionsEl.innerHTML = ""
     var question = [questions[0].title, questions[1].title, questions[2].title, questions[3].title, questions[4].title];
     var randomQuestion = Math.floor(Math.random() * question.length)
-    console.log(question[randomQuestion])
+
     // render the question
     var h3 = document.createElement("h3");
     h3.textContent = question[randomQuestion];
@@ -82,35 +84,51 @@ function renderRandomQuestion() {
     function renderChoices() {
         choicesEl.innerHTML = "";
         // create a choice list of all the choices arrays
-        var choicesList = [questions[0].choices, questions[1].choices, questions[2].choices, questions[3].choices];
-        console.log(choicesList);
+        var choicesList = [questions[0].choices, questions[1].choices, questions[2].choices, questions[3].choices, questions[4].choices];
+
         //make the choices match the question
         var choiceList = choicesList[randomQuestion];
-        console.log(choiceList);
 
         //create a loop to display all the choices in the choices array.
         for (var i = 0; i < choiceList.length; i++) {
-            console.log(choiceList[i]);
+            
             //Render the choices
             var choicebtns = document.createElement("button");
             choicebtns.textContent = choiceList[i];
             choicesEl.appendChild(choicebtns);
+            console.log(choicebtns);
+            
+            //Cycle through other questions
+            choicebtns.addEventListener("click", function (event) {
+            event.target.matches("button");
+            
+            localStorage.setItem("theirAnswer", choiceList[randomQuestion]);
+            renderRandomQuestion();
+                
+            })
         }
+        
+        
+
 
         //Make a list of correct answers
         var answers = [questions[0].answer, questions[1].answer, questions[2].answer, questions[3].answer, questions[4].answer];
         var correctAnswer = answers[randomQuestion];
-        //Create button for correct answer
-        var correctBtn = document.createElement("button");
-        correctBtn.textContent = correctAnswer;
-        choicesEl.appendChild(correctBtn);
 
-        //Add an if statement if correct answer is clicked.
+
+
+        //set attribute to correct answer
+
+
+        //Create a way to move on and generate a new question
+
 
 
     }
     renderChoices();
 }
+
+
 
 
 
