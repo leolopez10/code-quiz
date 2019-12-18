@@ -2,27 +2,27 @@
 var questions = [
     {
         title: "Commonly Used data types DO NOT include:",
-        choices: ["stings", "booleans", "alerts", "numbers"],
+        choices: ["stings", "booleans", "numbers"],
         answer: "alerts"
     },
     {
         title: "The condition in an if / else statment is enclosed within _____.",
-        choices: ["quotes", "curly brackets", "parentheses", "square brackets"],
+        choices: ["quotes", "curly brackets", "square brackets"],
         answer: "parentheses"
     },
     {
         title: "What javascipt method can we use to select an html element?",
-        choices: ["document.queryselector()", "document.getElementChild", "document.getElementById", "Both 1 and 3"],
+        choices: ["document.queryselector()", "document.getElementChild", "document.getElementById"],
         answer: "Both 1 and 3"
     },
     {
         title: "What html tag is NOT included in the HEAD tag?",
-        choices: ["link", "meta", "title", "header"],
+        choices: ["link", "meta", "title"],
         answer: "header"
     },
     {
         title: "What attribute is used in html to decorate content?",
-        choices: ["css", "class", "style", "src"],
+        choices: ["css", "class", "src"],
         answer: "style"
     }
 ]
@@ -31,7 +31,7 @@ var questions = [
 var secondsEl = document.querySelector("#seconds");
 var startBtn = document.querySelector("#startButton");
 var titleScreen = document.querySelector("#title-section");
-var quizScreen = document.querySelector("#quiz-section");  
+var quizScreen = document.querySelector("#quiz-section");
 
 var questionsEl = document.querySelector("#question")
 var choicesEl = document.querySelector("#choices");
@@ -49,29 +49,30 @@ startBtn.addEventListener("click", function () {
             //Take to high score section
         }
     }, 1000);
-    if(titleScreen.style.display === "block"){
+    if (titleScreen.style.display === "block") {
         titleScreen.style.display = "none";
     }
-    else{
+    else {
         titleScreen.style.dispay = "block"
     };
-    if(quizScreen.style.display === "none"){
+    if (quizScreen.style.display === "none") {
         quizScreen.style.display = "block"
     }
-    else{
+    else {
         quizScreen.style.display = "none";
     }
 })
 
-
 //********* generate random question with answers *********************8*/
-function renderRandomQuestion(){
+
+renderRandomQuestion();
+
+function renderRandomQuestion() {
     // create an array full of all the questions and have program pick one at random
     questionsEl.innerHTML = ""
     var question = [questions[0].title, questions[1].title, questions[2].title, questions[3].title, questions[4].title];
     var randomQuestion = Math.floor(Math.random() * question.length)
     console.log(question[randomQuestion])
-    
     // render the question
     var h3 = document.createElement("h3");
     h3.textContent = question[randomQuestion];
@@ -79,25 +80,43 @@ function renderRandomQuestion(){
 
     // create a question appropate the question
     function renderChoices() {
-    choicesEl.innerHTML = "";
-    // create a choice list of all the choices arrays
-    var choicesList = [questions[0].choices, questions[1].choices, questions[2].choices, questions[3].choices, questions[4].choices]; 
-    console.log(choicesList);
-    //make the choices match the question
-    var choiceList = choicesList[randomQuestion];
-    console.log(choiceList);
-    //create a loop to display all the choices in the choices array.
-    for (var i = 0; i < choiceList.length; i++) {
-        console.log(choiceList[i]);
-        //Render the choices
-        var choicebtns = document.createElement("button");
-        choicebtns.textContent = choiceList[i];
-        choicesEl.appendChild(choicebtns);
+        choicesEl.innerHTML = "";
+        // create a choice list of all the choices arrays
+        var choicesList = [questions[0].choices, questions[1].choices, questions[2].choices, questions[3].choices];
+        console.log(choicesList);
+        //make the choices match the question
+        var choiceList = choicesList[randomQuestion];
+        console.log(choiceList);
+
+        //create a loop to display all the choices in the choices array.
+        for (var i = 0; i < choiceList.length; i++) {
+            console.log(choiceList[i]);
+            //Render the choices
+            var choicebtns = document.createElement("button");
+            choicebtns.textContent = choiceList[i];
+            choicesEl.appendChild(choicebtns);
+        }
+
+        //Make a list of correct answers
+        var answers = [questions[0].answer, questions[1].answer, questions[2].answer, questions[3].answer, questions[4].answer];
+        var correctAnswer = answers[randomQuestion];
+        //Create button for correct answer
+        var correctBtn = document.createElement("button");
+        correctBtn.textContent = correctAnswer;
+        choicesEl.appendChild(correctBtn);
+
+        //Add an if statement if correct answer is clicked.
+        
+
     }
+    renderChoices();
 }
-renderChoices()
-}
-renderRandomQuestion();
+
+//*********click effects for answers */
+
+
+
+
 
 // Can generate 1 question at a time.*******************************************************************************************************************************************************
 // need to generate any question at any time now.
@@ -152,7 +171,7 @@ renderRandomQuestion();
 //     for (var i = 0; i < questions[1].choices.length; i++) {
 //         var choices = questions[1].choices[i];
 //         console.log(choices);
-        
+
 //         var choicebtns = document.createElement("button");
 //         choicebtns.textContent = choices;
 //         choicesEl.appendChild(choicebtns);
