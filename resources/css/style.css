@@ -22,3 +22,8 @@ p{
     display: block;
     margin: 0 auto;
 }
+
+.choice{
+    display: block;
+    margin-top: 10px;
+}

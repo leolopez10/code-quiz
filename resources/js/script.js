@@ -33,6 +33,7 @@ var startBtn = document.querySelector("#startButton");
 var titleScreen = document.querySelector("#title-section");
 var quizScreen = document.querySelector("#quiz-section");
 var highScoreScreen = document.querySelector("#highscore-section");
+var highScoreDisplay = document.querySelector("#highscore-display-section");
 
 var questionsEl = document.querySelector("#question");
 var choicesEl = document.querySelector("#choices");
@@ -47,6 +48,8 @@ var theirAnswer = localStorage.getItem("theirAnswer");
 
 // variable for submitting high scores
 var submitBtn = document.querySelector("#submit-button");
+var clearBtn = document.querySelector("#clear-btn");
+var playAgainBtn = document.querySelector("#return-btn");
 
 
 //Pressing buttons
@@ -58,7 +61,10 @@ startBtn.addEventListener("click", function (event) {
     
     //Call a function that starts the timer after click too
     runTimer();
+    renderRandomQuestion();
 })
+
+
 
 
 
@@ -76,32 +82,7 @@ function runTimer() {
         }
     }, 1000);
 }
-// //start game button....................................
-// startBtn.addEventListener("click", function () {
-//     //Timer**************************************************
-//     var timeLeft = 75;
-//     var countDownTimer = setInterval(function () {
-//         secondsEl.innerHTML = timeLeft;
-//         timeLeft -= 1;
 
-//         if (timeLeft <= 0) {
-//             clearInterval(countDownTimer);
-//             //Take to high score section
-//         }
-//     }, 1000);
-//     if (titleScreen.style.display === "block") {
-//         titleScreen.style.display = "none";
-//     }
-//     else {
-//         titleScreen.style.dispay = "block"
-//     };
-//     if (quizScreen.style.display === "none") {
-//         quizScreen.style.display = "block"
-//     }
-//     else {
-//         quizScreen.style.display = "none";
-//     }
-// })
 
 //********* generate random question with answers *********************8*/
 
@@ -110,61 +91,72 @@ function runTimer() {
 function renderRandomQuestion() {
     // create an array full of all the questions and have program pick one at random
     questionsEl.innerHTML = ""
-    var question = [questions[0].title, questions[1].title, questions[2].title, questions[3].title, questions[4].title];
-    var randomQuestion = Math.floor(Math.random() * question.length)
+    var questionArr = [questions[0].title, questions[1].title, questions[2].title, questions[3].title, questions[4].title];
+    var randomQuestion = Math.floor(Math.random() * questionArr.length)
+    var question = questionArr[randomQuestion];
 
     // render the question
     var h3 = document.createElement("h3");
-    h3.textContent = question[randomQuestion];
+    h3.textContent = question;
     questionsEl.appendChild(h3);
+
+    // return question
 
     // create a question appropate the question
     function renderChoices() {
-        choicesEl.innerHTML = "";
         // create a choice list of all the choices arrays
-        var choicesList = [questions[0].choices, questions[1].choices, questions[2].choices, questions[3].choices, questions[4].choices];
-
+        var choicesArr = [questions[0].choices, questions[1].choices, questions[2].choices, questions[3].choices, questions[4].choices];
+        
         //make the choices match the question
-        var choiceList = choicesList[randomQuestion];
-
+        var choiceList = choicesArr[randomQuestion];
+        console.log(choiceList);
+        choice1.innerHTML = choiceList[0];
+        choice2.innerHTML = choiceList[1];
+        choice3.innerHTML = choiceList[2];
+        choice4.innerHTML = choiceList[3];
+        
+        
+        return
+    
         //create a loop to display all the choices in the choices array.
         for (var i = 0; i < choiceList.length; i++) {
-
+    
             //Render the choices
             var choicebtns = document.createElement("button");
             choicebtns.textContent = choiceList[i];
             choicesEl.appendChild(choicebtns);
             console.log(choicebtns);
-
+    
             //Cycle through other questions
             choicebtns.addEventListener("click", function (event) {
                 event.target.matches("button");
-
+    
                 localStorage.setItem("theirAnswer", choiceList[randomQuestion]);
                 renderRandomQuestion();
-
+    
             })
         }
-
-
-
-
+    
+    
+    
+    
         //Make a list of correct answers
         var answers = [questions[0].answer, questions[1].answer, questions[2].answer, questions[3].answer, questions[4].answer];
         var correctAnswer = answers[randomQuestion];
-
-
-
+    
+    
+    
         //set attribute to correct answer
-
-
+    
+    
         //Create a way to move on and generate a new question
-
-
-
+    
+    
+    
     }
     renderChoices();
 }
+
 
 
 
