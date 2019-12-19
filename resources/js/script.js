@@ -45,11 +45,14 @@ var choice4 = document.querySelector("#choice4");
 
 // variables for storage..........................................
 var theirAnswer = localStorage.getItem("theirAnswer");
+var timeLeft = 0;
 
 // variable for submitting high scores
 var submitBtn = document.querySelector("#submit-button");
 var clearBtn = document.querySelector("#clear-btn");
 var playAgainBtn = document.querySelector("#return-btn");
+var initialsInput = document.querySelector("#initials");
+var highScorePost = document.querySelector("#highscore-post");
 
 
 //Pressing buttons
@@ -58,18 +61,43 @@ startBtn.addEventListener("click", function (event) {
     //Make the title section disappear and the quiz section appear
     titleScreen.setAttribute("style", "display: none;");
     quizScreen.setAttribute("style", "display: block");
-    
+
     //Call a function that starts the timer after click too
     runTimer();
     renderRandomQuestion();
 })
 
 
+//Cycle through other questions and store answer
+choicesEl.addEventListener("click", function (event) {
+    if (event.target.matches("button")) {
+        //couldn't get this to work properly
+        localStorage.setItem("theirAnswer", JSON.stringify(document.querySelector(".choice").textContent));
+        renderRandomQuestion();
+    }
+})
+
+//Adding final score to highscore list
+submitBtn.addEventListener("click", function (event) {
+    event.preventDefault();
+    if (event.target.matches("button")) {
+        highScoreScreen.setAttribute("style", "display: none;");
+        highScoreDisplay.setAttribute("style", "display: block;");
+
+        var initials = initialsInput.Value;
+        var highScore = initials + timeLeft;
+        highScorePost.textContent = highScore;
+        highScorePost.appendChild(highScore);
+
+    }
 
 
+})
 
+
+//Timer function*****************************************************
 function runTimer() {
-    var timeLeft = 75;
+    var timeLeft = 3;
     var timer = setInterval(function () {
         secondsEl.innerHTML = timeLeft;
         timeLeft -= 1;
@@ -83,10 +111,7 @@ function runTimer() {
     }, 1000);
 }
 
-
 //********* generate random question with answers *********************8*/
-
-// renderRandomQuestion();
 
 function renderRandomQuestion() {
     // create an array full of all the questions and have program pick one at random
@@ -106,53 +131,39 @@ function renderRandomQuestion() {
     function renderChoices() {
         // create a choice list of all the choices arrays
         var choicesArr = [questions[0].choices, questions[1].choices, questions[2].choices, questions[3].choices, questions[4].choices];
-        
+
         //make the choices match the question
         var choiceList = choicesArr[randomQuestion];
-        console.log(choiceList);
+
         choice1.innerHTML = choiceList[0];
         choice2.innerHTML = choiceList[1];
         choice3.innerHTML = choiceList[2];
         choice4.innerHTML = choiceList[3];
-        
-        
+
+
         return
-    
-        //create a loop to display all the choices in the choices array.
-        for (var i = 0; i < choiceList.length; i++) {
-    
-            //Render the choices
-            var choicebtns = document.createElement("button");
-            choicebtns.textContent = choiceList[i];
-            choicesEl.appendChild(choicebtns);
-            console.log(choicebtns);
-    
-            //Cycle through other questions
-            choicebtns.addEventListener("click", function (event) {
-                event.target.matches("button");
-    
-                localStorage.setItem("theirAnswer", choiceList[randomQuestion]);
-                renderRandomQuestion();
-    
-            })
-        }
-    
-    
-    
-    
+
+        //Store answer of the question and move on to a new generated question
+
+
+
+
+
+
+
         //Make a list of correct answers
         var answers = [questions[0].answer, questions[1].answer, questions[2].answer, questions[3].answer, questions[4].answer];
         var correctAnswer = answers[randomQuestion];
-    
-    
-    
+
+
+
         //set attribute to correct answer
-    
-    
+
+
         //Create a way to move on and generate a new question
-    
-    
-    
+
+
+
     }
     renderChoices();
 }
