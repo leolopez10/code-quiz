@@ -97,7 +97,7 @@ submitBtn.addEventListener("click", function (event) {
 
 //Timer function*****************************************************
 function runTimer() {
-    var timeLeft = 3;
+    var timeLeft = 50;
     var timer = setInterval(function () {
         secondsEl.innerHTML = timeLeft;
         timeLeft -= 1;
