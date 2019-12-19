@@ -1,1 +1,24 @@
 /* Hiding sections minus title */
+body{
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: larger;
+    background-color: grey;
+}
+
+section{
+    background-color: white;
+    border: solid 2px black;
+    padding: 10px;
+}
+h1{
+    text-align: center;
+}
+
+p{
+    padding: 0 10%;
+}
+
+#startButton{
+    display: block;
+    margin: 0 auto;
+}
