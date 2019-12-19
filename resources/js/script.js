@@ -51,13 +51,31 @@ var submitBtn = document.querySelector("#submit-button");
 
 //Pressing buttons
 //After clicking start button.
-startBtn.addEventListener("click",function(event){
+startBtn.addEventListener("click", function (event) {
     //Make the title section disappear and the quiz section appear
     titleScreen.setAttribute("style", "display: none;");
     quizScreen.setAttribute("style", "display: block");
-    //Call a function that starts the timer
+    
+    //Call a function that starts the timer after click too
+    runTimer();
 })
 
+
+
+function runTimer() {
+    var timeLeft = 75;
+    var timer = setInterval(function () {
+        secondsEl.innerHTML = timeLeft;
+        timeLeft -= 1;
+
+        if (timeLeft <= 0) {
+            clearInterval(timer);
+            //Take to high score section
+            quizScreen.setAttribute("style", "display: none;");
+            highScoreScreen.setAttribute("style", "display: block;");
+        }
+    }, 1000);
+}
 // //start game button....................................
 // startBtn.addEventListener("click", function () {
 //     //Timer**************************************************
@@ -111,24 +129,24 @@ function renderRandomQuestion() {
 
         //create a loop to display all the choices in the choices array.
         for (var i = 0; i < choiceList.length; i++) {
-            
+
             //Render the choices
             var choicebtns = document.createElement("button");
             choicebtns.textContent = choiceList[i];
             choicesEl.appendChild(choicebtns);
             console.log(choicebtns);
-            
+
             //Cycle through other questions
             choicebtns.addEventListener("click", function (event) {
-            event.target.matches("button");
-            
-            localStorage.setItem("theirAnswer", choiceList[randomQuestion]);
-            renderRandomQuestion();
-                
+                event.target.matches("button");
+
+                localStorage.setItem("theirAnswer", choiceList[randomQuestion]);
+                renderRandomQuestion();
+
             })
         }
-        
-        
+
+
 
 
         //Make a list of correct answers
