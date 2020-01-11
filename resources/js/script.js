@@ -1,327 +1,178 @@
-// questions *****************************************************
-var questions = [
-    {
-        title: "Commonly Used data types DO NOT include:",
-        choices: ["stings", "alerts", "booleans", "numbers"],
-        answer: "alerts"
-    },
-    {
-        title: "The condition in an if / else statment is enclosed within _____.",
-        choices: ["parentheses", "quotes", "curly brackets", "square brackets"],
-        answer: "parentheses"
-    },
-    {
-        title: "What javascipt method can we use to select an html element?",
-        choices: ["document.queryselector()", "document.getElementChild", "document.getElementById", "Both 1 and 3"],
-        answer: "Both 1 and 3"
-    },
-    {
-        title: "What html tag is NOT included in the HEAD tag?",
-        choices: ["link", "meta", "title", "header"],
-        answer: "header"
-    },
-    {
-        title: "What attribute is used in html to decorate content?",
-        choices: ["css", "class", "src", "style"],
-        answer: "style"
-    }
-]
+// variables to keep track of quiz state
+var currentQuestionIndex = 0;
+var time = questions.length * 15;
+var timerId;
 
-// variables from HTML....................................
-var secondsEl = document.querySelector("#seconds");
+// variables to reference DOM elements....................................
+var timeEl = document.querySelector("#time");
 var startBtn = document.querySelector("#startButton");
+var submitBtn = document.querySelector("#submit-button");
 var titleScreen = document.querySelector("#title-section");
 var quizScreen = document.querySelector("#quiz-section");
 var highScoreScreen = document.querySelector("#highscore-section");
 var highScoreDisplay = document.querySelector("#highscore-display-section");
+var initialsEl = document.querySelector("#initials");
+var feedbackEl = document.querySelector("#feedback");
 
 var questionsEl = document.querySelector("#question");
 var choicesEl = document.querySelector("#choices");
-var choice1 = document.querySelector("#choice1");
-var choice2 = document.querySelector("#choice2");
-var choice3 = document.querySelector("#choice3");
-var choice4 = document.querySelector("#choice4");
 
 
-// variables for storage..........................................
-var theirAnswer = localStorage.getItem("theirAnswer");
-var timeLeft = 0;
+//create a function to start the game
+function startQuiz() {
+    // hide start screen
+    titleScreen.setAttribute("class", "hide");
+  
+    // un-hide questions section
+    quizScreen.setAttribute("class", "show");
+  
+    // start timer
+    timerId = setInterval(tick, 1000);
+  
+    // show starting time
+    timeEl.textContent = time;
+  
+    getQuestion();
+  }
 
-// variable for submitting high scores
-var submitBtn = document.querySelector("#submit-button");
-var clearBtn = document.querySelector("#clear-btn");
-var playAgainBtn = document.querySelector("#return-btn");
-var initialsInput = document.querySelector("#initials");
-var highScorePost = document.querySelector("#highscore-post");
-
-
-//Pressing buttons
-//After clicking start button.
-startBtn.addEventListener("click", function (event) {
-    //Make the title section disappear and the quiz section appear
-    titleScreen.setAttribute("style", "display: none;");
-    quizScreen.setAttribute("style", "display: block");
-
-    //Call a function that starts the timer after click too
-    runTimer();
-    renderRandomQuestion();
-})
-
-
-//Cycle through other questions and store answer
-choicesEl.addEventListener("click", function (event) {
-    if (event.target.matches("button")) {
-        //couldn't get this to work properly
-        localStorage.setItem("theirAnswer", JSON.stringify(document.querySelector(".choice").textContent));
-        renderRandomQuestion();
+  //create a second taken off of a clock
+  function tick() {
+    // update time
+    time--;
+    timeEl.textContent = time;
+  
+    // check if user ran out of time
+    if (time <= 0) {
+      quizEnd();
     }
-})
+  }
 
-//Adding final score to highscore list
-submitBtn.addEventListener("click", function (event) {
-    event.preventDefault();
-    if (event.target.matches("button")) {
-        highScoreScreen.setAttribute("style", "display: none;");
-        highScoreDisplay.setAttribute("style", "display: block;");
+  function getQuestion() {
+    // get current question object from array
+    var currentQuestion = questions[currentQuestionIndex];
+  
+    // update title with current question
+    var titleEl = document.getElementById("question-title");
+    titleEl.textContent = currentQuestion.title;
+  
+    // clear out any old question choices
+    choicesEl.innerHTML = "";
+  
+    // loop over choices
+    currentQuestion.choices.forEach(function(choice, i) {
+      // create new button for each choice
+      var choiceNode = document.createElement("button");
+      choiceNode.setAttribute("class", "choice");
+      choiceNode.setAttribute("value", choice);
+  
+      choiceNode.textContent = i + 1 + ". " + choice;
+  
+      // attach click event listener to each choice
+      choiceNode.onclick = questionClick;
+  
+      // display on the page
+      choicesEl.appendChild(choiceNode);
+    });
+  }
 
-        var initials = initialsInput.Value;
-        var highScore = initials + timeLeft;
-        highScorePost.textContent = highScore;
-        highScorePost.appendChild(highScore);
+// click on question answer either generate new question or end quiz if final question, and deduct time for answering wrong
+  function questionClick() {
+    // check if user guessed wrong
+    if (this.value !== questions[currentQuestionIndex].answer) {
+      // penalize time
+      time -= 15;
+  
+      if (time < 0) {
+        time = 0;
+      }
+  
+      // display new time on page
+      timeEl.textContent = time;
+  
+  
+      feedbackEl.textContent = "Wrong!";
+    } else {
 
+      feedbackEl.textContent = "Correct!";
     }
-
-
-})
-
-
-//Timer function*****************************************************
-function runTimer() {
-    var timeLeft = 50;
-    var timer = setInterval(function () {
-        secondsEl.innerHTML = timeLeft;
-        timeLeft -= 1;
-
-        if (timeLeft <= 0) {
-            clearInterval(timer);
-            //Take to high score section
-            quizScreen.setAttribute("style", "display: none;");
-            highScoreScreen.setAttribute("style", "display: block;");
-        }
+  
+    // flash right/wrong feedback on page for half a second
+    feedbackEl.setAttribute("class", "feedback");
+    setTimeout(function() {
+      feedbackEl.setAttribute("class", "feedback hide");
     }, 1000);
-}
-
-//********* generate random question with answers *********************8*/
-
-function renderRandomQuestion() {
-    // create an array full of all the questions and have program pick one at random
-    questionsEl.innerHTML = ""
-    var questionArr = [questions[0].title, questions[1].title, questions[2].title, questions[3].title, questions[4].title];
-    var randomQuestion = Math.floor(Math.random() * questionArr.length)
-    var question = questionArr[randomQuestion];
-
-    // render the question
-    var h3 = document.createElement("h3");
-    h3.textContent = question;
-    questionsEl.appendChild(h3);
-
-    // return question
-
-    // create a question appropate the question
-    function renderChoices() {
-        // create a choice list of all the choices arrays
-        var choicesArr = [questions[0].choices, questions[1].choices, questions[2].choices, questions[3].choices, questions[4].choices];
-
-        //make the choices match the question
-        var choiceList = choicesArr[randomQuestion];
-
-        choice1.innerHTML = choiceList[0];
-        choice2.innerHTML = choiceList[1];
-        choice3.innerHTML = choiceList[2];
-        choice4.innerHTML = choiceList[3];
-
-
-        return
-
-        //Store answer of the question and move on to a new generated question
-
-
-
-
-
-
-
-        //Make a list of correct answers
-        var answers = [questions[0].answer, questions[1].answer, questions[2].answer, questions[3].answer, questions[4].answer];
-        var correctAnswer = answers[randomQuestion];
-
-
-
-        //set attribute to correct answer
-
-
-        //Create a way to move on and generate a new question
-
-
-
+  
+    // move to next question
+    currentQuestionIndex++;
+  
+    // check if we've run out of questions
+    if (currentQuestionIndex === questions.length) {
+      quizEnd();
+    } else {
+      getQuestion();
     }
-    renderChoices();
-}
+  }
+
+
+// end the quiz function
+  function quizEnd() {
+    // stop timer
+    clearInterval(timerId);
+  
+    // show end screen
+    var highscoreSectionEl = document.querySelector("#highscore-section");
+    highscoreSectionEl.setAttribute("class", "show");
+  
+    // show final score
+    var finalScoreEl = document.querySelector("#final-score");
+    finalScoreEl.textContent = time;
+  
+    // hide questions section
+    quizScreen.setAttribute("class", "hide");
+  }
+
+// function for saving highscore
+function saveHighscore() {
+    // get value of input box
+    var initials = initialsEl.value.trim();
+  
+    // make sure value wasn't empty
+    if (initials !== "") {
+      // get saved scores from localstorage, or if not any, set to empty array
+      var highscores =
+        JSON.parse(window.localStorage.getItem("highscores")) || [];
+  
+      // format new score object for current user
+      var newScore = {
+        score: time,
+        initials: initials
+      };
+  
+      // save to localstorage
+      highscores.push(newScore);
+      window.localStorage.setItem("highscores", JSON.stringify(highscores));
+  
+      // redirect to next page
+      window.location.href = "highScore.html";
+    }
+  }
+
+  function checkForEnter(event) {
+    // "13" represents the enter key
+    if (event.key === "Enter") {
+      saveHighscore();
+    }
+  }
+  
+  // user clicks button to submit initials
+  submitBtn.onclick = saveHighscore;
+  
+  // user clicks button to start quiz
+  startBtn.onclick = startQuiz;
+  
+  initialsEl.onkeyup = checkForEnter;
 
 
 
 
 
-
-//*********click effects for answers */
-
-
-
-
-
-// Can generate 1 question at a time.*******************************************************************************************************************************************************
-// need to generate any question at any time now.
-
-// render1stQuestion();
-// render1stChoices();
-// render2ndQuestion();
-// render2ndChoices();
-// render3rdQuestion();
-// render3rdChoices();
-// render4thQuestion();
-// render4thChoices();
-// render5thQuestion();
-// render5thChoices();
-
-
-// function render1stQuestion() {
-//     questionsEl.innerHTML = "";
-//     var question = questions[0].title;
-//     console.log(question);
-
-//     var h3 = document.createElement("h3");
-//     h3.textContent = question;
-//     questionsEl.appendChild(h3);
-// }
-
-// function render1stChoices() {
-//     choicesEl.innerHTML = "";
-//     for (var i = 0; i < questions[0].choices.length; i++) {
-//         var choices = questions[0].choices[i];
-//         console.log(choices);
-
-//         var choicebtns = document.createElement("button");
-//         choicebtns.textContent = choices;
-//         choicesEl.appendChild(choicebtns);
-//     }
-// }
-
-// //Second question************************************************************************************************************************************
-// function render2ndQuestion() {
-//     questionsEl.innerHTML = "";
-//     var question = questions[1].title;
-//     console.log(question);
-
-//     var h3 = document.createElement("h3");
-//     h3.textContent = question;
-//     questionsEl.appendChild(h3);
-// }
-
-// function render2ndChoices() {
-//     choicesEl.innerHTML = "";
-//     for (var i = 0; i < questions[1].choices.length; i++) {
-//         var choices = questions[1].choices[i];
-//         console.log(choices);
-
-//         var choicebtns = document.createElement("button");
-//         choicebtns.textContent = choices;
-//         choicesEl.appendChild(choicebtns);
-//     }
-// }
-// //Third question ************************************************************************************************************************************
-// function render3rdQuestion() {
-//     questionsEl.innerHTML = "";
-//     var question = questions[2].title;
-//     console.log(question);
-
-//     var h3 = document.createElement("h3");
-//     h3.textContent = question;
-//     questionsEl.appendChild(h3);
-// }
-
-// function render3rdChoices() {
-//     choicesEl.innerHTML = "";
-//     for (var i = 0; i < questions[2].choices.length; i++) {
-//         var choices = questions[2].choices[i];
-//         console.log(choices);
-
-//         var choicebtns = document.createElement("button");
-//         choicebtns.textContent = choices;
-//         choicesEl.appendChild(choicebtns);
-//     }
-// }
-// //Fourth question **************************************************************************************************************************************
-// function render4thQuestion() {
-//     questionsEl.innerHTML = "";
-//     var question = questions[3].title;
-//     console.log(question);
-
-//     var h3 = document.createElement("h3");
-//     h3.textContent = question;
-//     questionsEl.appendChild(h3);
-// }
-
-// function render4thChoices() {
-//     choicesEl.innerHTML = "";
-//     for (var i = 0; i < questions[3].choices.length; i++) {
-//         var choices = questions[3].choices[i];
-//         console.log(choices);
-
-//         var choicebtns = document.createElement("button");
-//         choicebtns.textContent = choices;
-//         choicesEl.appendChild(choicebtns);
-//     }
-// }
-// // Fifth question *************************************************************************************************************************************
-// function render5thQuestion() {
-//     questionsEl.innerHTML = "";
-//     var question = questions[4].title;
-//     console.log(question);
-
-//     var h3 = document.createElement("h3");
-//     h3.textContent = question;
-//     questionsEl.appendChild(h3);
-// }
-
-// function render5thChoices() {
-//     choicesEl.innerHTML = "";
-//     for (var i = 0; i < questions[4].choices.length; i++) {
-//         var choices = questions[4].choices[i];
-//         console.log(choices);
-
-//         var choicebtns = document.createElement("button");
-//         choicebtns.textContent = choices;
-//         choicesEl.appendChild(choicebtns);
-//     }
-// }
-
-// ****************************************************************************************************************************************************************************************************
-
-// var todos = ["Learn HTML", "Learn CSS", "Learn JavaScript"];
-
-// renderTodos();
-
-// function renderTodos() {
-//   // Clear todoList element and update todoCountSpan
-//   todoList.innerHTML = "";
-//   todoCountSpan.textContent = todos.length;
-
-//   // Render a new li for each todo
-//   for (var i = 0; i < todos.length; i++) {
-//     var todo = todos[i];
-
-//     var li = document.createElement("li");
-//     li.textContent = todo;
-//     todoList.appendChild(li);
-//   }
-// }

@@ -10,6 +10,13 @@ section{
     border: solid 2px black;
     padding: 10px;
 }
+.hide {
+    display: none;
+}
+
+.show {
+    display: block;
+}
 h1{
     text-align: center;
 }
